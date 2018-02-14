@@ -144,5 +144,6 @@ void rgblight_effect_rainbow_swirl(uint8_t interval);
 void rgblight_effect_snake(uint8_t interval);
 void rgblight_effect_knight(uint8_t interval);
 void rgblight_effect_christmas(void);
+void rgblight_effect_spark(void);
 
 #endif

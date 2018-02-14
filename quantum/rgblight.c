@@ -499,7 +499,8 @@ void rgblight_task(void) {
       rgblight_effect_knight(rgblight_config.mode - 21);
     } else if (rgblight_config.mode == 24) {
       // mode = 24, christmas mode
-      rgblight_effect_christmas();
+      //rgblight_effect_christmas();
+      rgblight_effect_spark();
     }
   }
 }
@@ -637,7 +638,7 @@ void rgblight_effect_knight(uint8_t interval) {
   }
 }
 
-
+/*
 void rgblight_effect_christmas(void) {
   static uint16_t current_offset = 0;
   static uint16_t last_timer = 0;
@@ -652,6 +653,31 @@ void rgblight_effect_christmas(void) {
     hue = 0 + ((i/RGBLIGHT_EFFECT_CHRISTMAS_STEP + current_offset) % 2) * 120;
     sethsv(hue, rgblight_config.sat, rgblight_config.val, (LED_TYPE *)&led[i]);
   }
+  rgblight_set();
+}
+*/
+
+void rgblight_effect_spark() {
+  static uint16_t INTERVAL = 10;
+  static uint16_t last_timer = 0;
+  static bool regen = false;
+  if(timer_elapsed(last_timer) < (regen ? INTERVAL * 120 : INTERVAL)) { return; }
+  regen = false;
+
+  static uint8_t i = 42 % RGBLED_NUM;
+  static uint8_t val = 255;
+
+  if(val > 16) {
+    val = val-1;
+    rgblight_setrgb(0,0,0);
+    rgblight_sethsv_at(rgblight_config.hue, rgblight_config.sat, val, i);
+  } else {
+    rgblight_sethsv_at(rgblight_config.hue, rgblight_config.sat, 0, i);
+    i = (last_timer-i) % RGBLED_NUM;
+    val = rgblight_config.val;
+    regen = true;
+  }
+  last_timer = timer_read();
   rgblight_set();
 }
 
